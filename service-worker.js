@@ -3,9 +3,9 @@ const ASSETS = [
   './index.html',
   './manifest.json',
   './service-worker.js',
-  './icons/icon-192.png',
-  './icons/icon-256.png',
-  './icons/icon-512.png'
+  './icon-192.png',
+  './icon-256.png',
+  './icon-512.png'
 ];
 
 // Install: precache core app shell
