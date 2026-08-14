@@ -1,17 +1,17 @@
-const CACHE_NAME = 'percha-cache-v1';
+const CACHE_NAME = 'percha-cache-v2';
 const ASSETS = [
-  './index.html',
-  './manifest.json',
-  './service-worker.js',
-  './icon-192.png',
-  './icon-256.png',
-  './icon-512.png'
+  '/',
+  '/manifest.json',
+  '/service-worker.js',
+  '/icon-192.png',
+  '/icon-256.png',
+  '/icon-512.png'
 ];
 
 // Install: precache core app shell
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS))
+    caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS).catch(() => {}))
   );
   self.skipWaiting();
 });
@@ -29,12 +29,17 @@ self.addEventListener('activate', event => {
 // Fetch: navigation => network-first; others => cache-first then network (and cache)
 self.addEventListener('fetch', event => {
   const req = event.request;
+
+  // Never cache Next.js internals / HMR / API traffic.
+  const url = new URL(req.url);
+  if (url.pathname.startsWith('/_next/') || url.pathname.startsWith('/api/')) {
+    return;
+  }
+
   // navigation (HTML) requests: network-first with fallback to cached shell
   if (req.mode === 'navigate') {
     event.respondWith(
-      fetch(req).then(resp => {
-        return resp;
-      }).catch(() => caches.match('./index.html'))
+      fetch(req).then(resp => resp).catch(() => caches.match('/'))
     );
     return;
   }
@@ -44,20 +49,19 @@ self.addEventListener('fetch', event => {
     event.respondWith(
       caches.match(req).then(cached => {
         if (cached) {
-          // update cache in background
           fetch(req).then(resp => {
-            if(resp && resp.status === 200) {
+            if (resp && resp.status === 200) {
               caches.open(CACHE_NAME).then(cache => cache.put(req, resp.clone()));
             }
-          }).catch(()=>{});
+          }).catch(() => {});
           return cached;
         }
         return fetch(req).then(resp => {
-          if(resp && resp.status === 200) {
+          if (resp && resp.status === 200) {
             caches.open(CACHE_NAME).then(cache => cache.put(req, resp.clone()));
           }
           return resp;
-        }).catch(() => caches.match('./index.html'));
+        }).catch(() => caches.match('/'));
       })
     );
   }
