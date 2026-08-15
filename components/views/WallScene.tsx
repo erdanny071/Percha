@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Occasion } from '@/types/garment';
 import { usePerchaStore } from '@/store/usePerchaStore';
+import styles from './WallScene.module.css';
 
 interface WallSceneProps {
   onCloset: () => void;
@@ -20,7 +21,6 @@ const occasions: Array<{ id: Occasion; label: string; hint: string }> = [
   { id: 'elegante', label: 'Elegante', hint: 'Más formal y cuidado' },
 ];
 
-// Temporary Figma asset URL. Keep this isolated so it can be replaced by a local public asset later.
 const heroImage = 'https://www.figma.com/api/mcp/asset/87b05625-9ebe-4827-b74a-26519d59e40b.png';
 
 export function WallScene({ onCloset, onHistory, onToday }: WallSceneProps) {
@@ -36,32 +36,32 @@ export function WallScene({ onCloset, onHistory, onToday }: WallSceneProps) {
   };
 
   return (
-    <section className="home-screen" aria-label="Inicio">
-      <header className="home-brand-header">
-        <div className="home-brand">
-          <span className="home-brand-mark" aria-hidden="true">⊗</span>
+    <section className={styles.homeScreen} aria-label="Inicio">
+      <header className={styles.homeBrandHeader}>
+        <div className={styles.homeBrand}>
+          <span className={styles.homeBrandMark} aria-hidden="true">⊗</span>
           <span>Percha</span>
         </div>
-        <span className="ai-badge">✣ AI ASSIST</span>
+        <span className={styles.aiBadge}>✣ AI ASSIST</span>
       </header>
 
-      <div className="home-content">
-        <button className="home-hero" onClick={onCloset} aria-label="Abrir mi armario">
+      <div className={styles.homeContent}>
+        <button className={styles.homeHero} onClick={onCloset} aria-label="Abrir mi armario">
           <img src={heroImage} alt="Armario de Percha" />
-          <span className="hero-ai-label">✣ AI Wardrobe Curator</span>
+          <span className={styles.heroAiLabel}>✣ AI Wardrobe Curator</span>
         </button>
 
-        <div className="home-copy">
+        <div className={styles.homeCopy}>
           <h1>Tu armario<br />inteligente</h1>
           <p>Organiza tus prendas, redescubre tu estilo y genera los outfits perfectos para cada ocasión con nuestro asistente de moda virtual.</p>
         </div>
 
-        <div className="home-actions">
-          <button className="home-primary" onClick={onCloset}>Abrir mi armario <span>→</span></button>
-          <button className="home-secondary" onClick={() => setShowOccasions(true)}>✣ <span>¿Qué me pongo hoy?</span></button>
+        <div className={styles.homeActions}>
+          <button className={styles.homePrimary} onClick={onCloset}>Abrir mi armario <span>→</span></button>
+          <button className={styles.homeSecondary} onClick={() => setShowOccasions(true)}>✣ <span>¿Qué me pongo hoy?</span></button>
         </div>
 
-        <div className="home-stats">
+        <div className={styles.homeStats}>
           <span><strong>{readyCount}</strong> Prendas listas</span>
           <i />
           <span><strong>{outfits.length}</strong> Outfits creados</span>
