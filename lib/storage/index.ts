@@ -1,4 +1,4 @@
-import { idbDelete, idbGet, idbList, idbSet, openDB } from './indexeddb';
+import { idbDelete, idbGet, idbList, idbSet, openDB, IdbRow } from './indexeddb';
 import { migrateLocalStorageToIndexedDB } from './migration';
 
 let initialized = false;
@@ -29,9 +29,10 @@ export const storage = {
     return idbDelete(key);
   },
 
-  async list(prefix: string): Promise<string[]> {
-    return idbList(prefix);
+  async list<T = unknown>(prefix: string): Promise<IdbRow<T>[]> {
+    return idbList<T>(prefix);
   },
 };
 
 export { idbDelete, idbGet, idbList, idbSet, openDB } from './indexeddb';
+export type { IdbRow } from './indexeddb';
