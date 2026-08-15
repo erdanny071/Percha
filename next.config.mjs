@@ -1,5 +1,12 @@
 /** @type {import('next').NextConfig} */
+const isGitHubPages = process.env.GITHUB_ACTIONS === "true";
+
 const nextConfig = {
+  output: "export",
+  trailingSlash: true,
+  ...(isGitHubPages
+    ? { basePath: "/Percha", assetPrefix: "/Percha/" }
+    : {}),
   async headers() {
     return [
       {
@@ -8,14 +15,10 @@ const nextConfig = {
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
           { key: "X-Frame-Options", value: "SAMEORIGIN" },
-          {
-            key: "Permissions-Policy",
-            value: "geolocation=(), microphone=(), camera=(self)",
-          },
+          { key: "Permissions-Policy", value: "geolocation=(), microphone=(), camera=(self)" },
         ],
       },
       {
-        // Ensure the service worker can control the whole scope.
         source: "/service-worker.js",
         headers: [
           { key: "Cache-Control", value: "no-cache" },
