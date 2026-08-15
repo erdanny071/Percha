@@ -1,10 +1,10 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Playfair_Display, IBM_Plex_Mono } from "next/font/google";
+import { Inter, Playfair_Display, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import "./figma-polish.css";
 import { ServiceWorkerRegister } from "@/components/service-worker-register";
 
-const geist = Geist({
+const inter = Inter({
   subsets: ["latin"],
   variable: "--font-geist",
   display: "swap",
@@ -29,11 +29,7 @@ export const metadata: Metadata = {
   description: "Tu armario, sin repetir",
   manifest: "/manifest.json",
   applicationName: "Percha",
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "default",
-    title: "Percha",
-  },
+  appleWebApp: { capable: true, statusBarStyle: "default", title: "Percha" },
   icons: {
     icon: [
       { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
@@ -49,16 +45,9 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html
-      lang="es"
-      className={`${geist.variable} ${playfair.variable} ${plexMono.variable}`}
-    >
+    <html lang="es" className={`${inter.variable} ${playfair.variable} ${plexMono.variable}`}>
       <body>
         {children}
         <ServiceWorkerRegister />
