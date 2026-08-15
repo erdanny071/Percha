@@ -1,0 +1,142 @@
+/* Figma visual polish — focused on the Home and Wardrobe screens. */
+
+.phone {
+  background: #fbf8f4;
+  border-radius: 28px;
+}
+
+.home-screen {
+  background:
+    radial-gradient(circle at 84% 9%, rgba(220,208,236,.28), transparent 24%),
+    #fbf8f4;
+}
+
+.home-screen .brand-header {
+  height: 82px;
+  padding: 34px 24px 10px;
+}
+
+.home-screen .brand-mark {
+  width: 30px;
+  height: 30px;
+  border-radius: 10px;
+  background: #eee7f5;
+  border-color: #d8b458;
+}
+
+.home-screen .wordmark {
+  font-size: 21px;
+}
+
+.home-screen .ai-badge {
+  border-radius: 999px;
+  padding: 7px 11px;
+  font-size: 9px;
+  letter-spacing: .04em;
+}
+
+.home-screen .hero {
+  padding: 10px 24px 28px;
+}
+
+.home-screen .hero-image {
+  height: 292px;
+  border: 0;
+  border-radius: 22px;
+  box-shadow: 0 14px 34px rgba(70,54,45,.12);
+  background-position: center;
+}
+
+.home-screen .hero-image::before {
+  left: 14px;
+  bottom: 14px;
+  padding: 7px 12px;
+  font-size: 10px;
+  background: rgba(255,255,255,.9);
+}
+
+.home-screen .hero h1 {
+  margin: 24px 0 10px;
+  font-size: 38px;
+  line-height: 40px;
+  letter-spacing: -.025em;
+}
+
+.home-screen .hero p {
+  max-width: 330px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  line-height: 21px;
+}
+
+.home-screen .primary-btn {
+  height: 52px;
+  border-radius: 14px;
+  font-size: 13px;
+}
+
+.home-screen .secondary-btn.large {
+  height: 50px;
+  border-radius: 14px;
+  margin-top: 10px;
+  font-size: 13px;
+}
+
+.home-screen .stats {
+  margin-top: 18px;
+  padding-top: 14px;
+  font-size: 10px;
+}
+
+.closed-closet {
+  background: #fbf8f4;
+}
+
+.closed-closet .status-space {
+  height: 50px;
+}
+
+.closed-closet .center-title {
+  padding-top: 12px;
+}
+
+.closed-closet .center-title h2 {
+  font-size: 31px;
+  letter-spacing: -.02em;
+}
+
+.closed-closet .closed-cabinet {
+  width: 252px;
+  height: 408px;
+  margin-top: 22px;
+  box-shadow: 0 24px 40px rgba(82,65,96,.18);
+}
+
+.closed-closet .closed-cabinet div {
+  background: linear-gradient(150deg,#e7dff0 0%,#c6b6d4 54%,#a794ba 100%);
+}
+
+.closed-closet .closed-cabinet span {
+  bottom: -48px;
+  font-size: 11px;
+  letter-spacing: .01em;
+}
+
+.closed-closet .side-actions {
+  right: 18px;
+  top: 47%;
+}
+
+.closed-closet .side-actions button {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  color: #725c89;
+}
+
+@media (max-width: 420px) {
+  .phone {
+    width: 100vw;
+    border-radius: 0;
+  }
+}
