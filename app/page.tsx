@@ -1,59 +1,73 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { storage } from '@/lib/storage';
+import { useEffect, useMemo, useState } from 'react';
+import { usePerchaStore } from '@/store/usePerchaStore';
+import { Category, Status } from '@/types/garment';
+
+const categoryLabels: Record<Category, string> = {
+  top: 'Parte de arriba', bottom: 'Parte de abajo', dress: 'Vestido / mono',
+  outerwear: 'Abrigo / chaqueta', shoes: 'Calzado', accessory: 'Accesorio', cap: 'Gorras',
+};
+
+const statusLabels: Record<Status, string> = {
+  disponible: 'Disponible', lavando: 'Lavando', no_quiero: 'No me la quiero poner',
+};
 
 export default function Home() {
-  const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');
-  const [garmentCount, setGarmentCount] = useState(0);
-  const [outfitCount, setOutfitCount] = useState(0);
+  const { garments, outfits, initialized, init, toggleFavorite, cycleStatus } = usePerchaStore();
+  const [filter, setFilter] = useState<'todas' | 'favoritos' | Status>('todas');
 
-  useEffect(() => {
-    let cancelled = false;
+  useEffect(() => { void init(); }, [init]);
 
-    async function init() {
-      try {
-        await storage.init();
-        const [garments, outfits] = await Promise.all([
-          storage.list('garment:'),
-          storage.list('outfit:'),
-        ]);
+  const filtered = useMemo(() => {
+    if (filter === 'todas') return garments;
+    if (filter === 'favoritos') return garments.filter((g) => g.favorite);
+    return garments.filter((g) => g.status === filter);
+  }, [garments, filter]);
 
-        if (cancelled) return;
-        setGarmentCount(garments.length);
-        setOutfitCount(outfits.length);
-        setStatus('ready');
-      } catch {
-        if (!cancelled) setStatus('error');
-      }
-    }
-
-    void init();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  if (!initialized) {
+    return <main className="percha-shell"><p className="muted">Cargando tu armario…</p></main>;
+  }
 
   return (
-    <main style={{ maxWidth: 480, margin: '0 auto', minHeight: '100vh', padding: 24 }}>
-      <h1 style={{ fontFamily: 'Fraunces, serif', fontWeight: 700, fontSize: 19, letterSpacing: 2, textTransform: 'uppercase' }}>
-        Percha
-      </h1>
-      <p style={{ fontFamily: 'IBM Plex Mono, monospace', fontSize: 10, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: 0.4 }}>
-        tu armario, sin repetir
-      </p>
+    <main className="percha-shell">
+      <header className="app-header">
+        <div>
+          <h1>Percha</h1>
+          <p>tu armario, sin repetir</p>
+        </div>
+        <span className="counter">{garments.length} prendas</span>
+      </header>
 
-      <section style={{ marginTop: 32 }}>
-        {status === 'loading' && <p style={{ color: 'var(--muted)' }}>Cargando tu armario…</p>}
-        {status === 'error' && <p style={{ color: 'var(--muted)' }}>No se ha podido abrir el almacenamiento.</p>}
-        {status === 'ready' && (
-          <>
-            <p style={{ color: 'var(--muted)' }}>Datos conectados correctamente.</p>
-            <p style={{ marginTop: 12 }}>Prendas: <strong>{garmentCount}</strong></p>
-            <p>Conjuntos: <strong>{outfitCount}</strong></p>
-          </>
-        )}
-      </section>
+      <nav className="filter-row" aria-label="Filtros">
+        {(['todas', 'favoritos', 'disponible', 'lavando', 'no_quiero'] as const).map((value) => (
+          <button key={value} className={filter === value ? 'filter active' : 'filter'} onClick={() => setFilter(value)}>
+            {value === 'todas' ? 'Todas' : value === 'favoritos' ? 'Favoritos' : statusLabels[value]}
+          </button>
+        ))}
+      </nav>
+
+      {filtered.length === 0 ? (
+        <section className="empty-state"><strong>No hay prendas aquí.</strong><span>Tu armario aparecerá aquí cuando tenga datos.</span></section>
+      ) : (
+        <section className="garment-grid">
+          {filtered.map((garment) => (
+            <article className="garment-card" key={garment.id}>
+              <div className="garment-image">
+                {garment.image ? <img src={garment.image} alt={garment.name} /> : <span>sin foto</span>}
+                <button className="icon-button" onClick={() => void toggleFavorite(garment.id)} aria-label="Favorito">{garment.favorite ? '♥' : '♡'}</button>
+              </div>
+              <div className="garment-info">
+                <strong>{garment.name}</strong>
+                <small>{categoryLabels[garment.category]}</small>
+                <button className="status-button" onClick={() => void cycleStatus(garment.id)}>{statusLabels[garment.status]}</button>
+              </div>
+            </article>
+          ))}
+        </section>
+      )}
+
+      <footer className="data-footer">{outfits.length} conjuntos guardados · datos locales conectados</footer>
     </main>
   );
 }
