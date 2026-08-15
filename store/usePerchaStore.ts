@@ -1,8 +1,8 @@
 import { create } from 'zustand';
-import { Garment, Status } from '@/types/garment';
-import { Outfit } from '@/types/outfit';
-import { LogMap } from '@/types/log';
-import { Settings } from '@/types/settings';
+import type { Garment, Status } from '@/types/garment';
+import type { Outfit } from '@/types/outfit';
+import type { LogMap } from '@/types/log';
+import type { Settings } from '@/types/settings';
 import { storage } from '@/lib/storage';
 import { loadGarments, saveGarment, deleteGarmentStorage } from '@/lib/garments/crud';
 import { loadOutfits, saveOutfit, deleteOutfitStorage } from '@/lib/outfits/crud';
