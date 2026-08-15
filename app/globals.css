@@ -1,29 +1,42 @@
 :root {
-  --bg: #EFE8D8;
-  --card: #FBF7ED;
-  --muted: #77705E;
-  --ink: #2A2119;
-  --accent: #B2502F;
-  --accent-deep: #8A3A22;
-  --tan: #8B6F47;
-  --canvas-deep: #DCCFB2;
-  --success: #4F7A4A;
-  --success-bg: #E1E9DA;
-  --wash: #3E617A;
-  --wash-bg: #DCE6EB;
-  --skip: #8F8570;
-  --skip-bg: #E7E1D0;
-  --shadow: 0 10px 22px rgba(42, 33, 25, 0.09);
+  --bg: #f4efe7;
+  --surface: #faf7f1;
+  --ink: #272329;
+  --muted: #827982;
+  --accent: #8d769c;
+  --accent-dark: #67546f;
+  --line: #ddd4da;
+  --shadow: 0 12px 35px rgba(58, 45, 59, .08);
 }
 
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
+html, body { margin: 0; min-height: 100%; background: var(--bg); color: var(--ink); }
+body { font-family: Inter, system-ui, sans-serif; }
+button { font: inherit; }
 
-body {
-  margin: 0;
-  padding: 0;
-  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', 'Noto Color Emoji', 'Apple Color Emoji', sans-serif;
-  background: var(--bg);
-  color: var(--ink);
+.percha-shell { width: min(100%, 760px); margin: 0 auto; min-height: 100vh; padding: 28px 18px 42px; }
+.app-header { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 24px; }
+.app-header h1 { margin: 0; font-family: Fraunces, Georgia, serif; font-size: 32px; letter-spacing: .02em; }
+.app-header p { margin: 4px 0 0; color: var(--muted); font: 10px/1.2 'IBM Plex Mono', monospace; text-transform: uppercase; letter-spacing: .08em; }
+.counter { color: var(--muted); font: 11px 'IBM Plex Mono', monospace; }
+.filter-row { display: flex; gap: 7px; overflow-x: auto; padding-bottom: 16px; scrollbar-width: none; }
+.filter { flex: 0 0 auto; border: 1px solid var(--line); border-radius: 999px; background: transparent; color: var(--muted); padding: 8px 12px; font-size: 12px; cursor: pointer; }
+.filter.active { background: var(--ink); border-color: var(--ink); color: white; }
+.garment-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.garment-card { overflow: hidden; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); box-shadow: var(--shadow); }
+.garment-image { position: relative; aspect-ratio: 1 / 1.05; display: grid; place-items: center; background: #e8e0e6; color: var(--muted); font: 10px 'IBM Plex Mono', monospace; text-transform: uppercase; }
+.garment-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.icon-button { position: absolute; top: 8px; right: 8px; width: 32px; height: 32px; border: 0; border-radius: 50%; background: rgba(250,247,241,.9); color: var(--accent-dark); cursor: pointer; font-size: 18px; }
+.garment-info { padding: 12px; display: grid; gap: 5px; }
+.garment-info strong { font-family: Fraunces, Georgia, serif; font-size: 16px; }
+.garment-info small { color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: .04em; }
+.status-button { width: fit-content; border: 0; padding: 0; background: none; color: var(--accent-dark); font-size: 11px; cursor: pointer; }
+.empty-state { min-height: 220px; border: 1px dashed var(--line); border-radius: 16px; display: grid; place-content: center; text-align: center; gap: 7px; color: var(--muted); }
+.empty-state strong { color: var(--ink); font-family: Fraunces, Georgia, serif; }
+.muted { color: var(--muted); }
+.data-footer { margin-top: 28px; color: var(--muted); text-align: center; font: 10px 'IBM Plex Mono', monospace; text-transform: uppercase; letter-spacing: .05em; }
+
+@media (max-width: 520px) {
+  .percha-shell { padding-top: 20px; }
+  .garment-grid { gap: 9px; }
 }
