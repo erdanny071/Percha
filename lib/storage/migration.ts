@@ -7,6 +7,14 @@ const LEGACY_KEYS = (key: string) =>
   key === 'ai-api-key' ||
   key === 'use-ai';
 
+function parseJson<T>(value: string): T | string {
+  try {
+    return JSON.parse(value) as T;
+  } catch {
+    return value;
+  }
+}
+
 export async function migrateLocalStorageToIndexedDB(): Promise<void> {
   if (typeof localStorage === 'undefined') return;
 
@@ -24,16 +32,30 @@ export async function migrateLocalStorageToIndexedDB(): Promise<void> {
 
     try {
       if (key.startsWith('garment:')) {
-        const garment = JSON.parse(value) as { id?: string; image?: unknown };
-        const id = garment.id || key.split(':')[1];
+        const garment = parseJson<{ id?: string; image?: unknown }>(value);
+        if (typeof garment === 'string') {
+          await idbSet(key, garment);
+          continue;
+        }
 
+        const id = garment.id || key.split(':')[1];
         if (typeof garment.image === 'string' && garment.image.startsWith('data:')) {
           const blob = dataUrlToBlob(garment.image);
           if (blob) await idbSet(`image:${id}`, blob);
           delete garment.image;
-          await idbSet(key, JSON.stringify(garment));
-          continue;
         }
+        await idbSet(key, garment);
+        continue;
+      }
+
+      if (key.startsWith('outfit:') || key === 'outfit-log') {
+        await idbSet(key, parseJson(value));
+        continue;
+      }
+
+      if (key === 'use-ai') {
+        await idbSet(key, value === 'true');
+        continue;
       }
 
       await idbSet(key, value);
