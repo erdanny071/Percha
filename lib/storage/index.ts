@@ -1,4 +1,5 @@
-import { idbDelete, idbGet, idbList, idbSet, openDB, IdbRow } from './indexeddb';
+import { idbDelete, idbGet, idbList, idbSet, openDB } from './indexeddb';
+import type { IdbRow } from './indexeddb';
 import { migrateLocalStorageToIndexedDB } from './migration';
 
 let initialized = false;
