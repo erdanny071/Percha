@@ -25,6 +25,12 @@ export function WallScene({ onCloset, onHistory, onToday }: WallSceneProps) {
   const month = now.toLocaleDateString('es-ES', { month: 'long' });
   const [showOccasions, setShowOccasions] = useState(false);
 
+  const chooseOccasion = (occasion: Occasion) => {
+    sessionStorage.setItem('percha-selected-occasion', occasion);
+    setShowOccasions(false);
+    onToday(occasion);
+  };
+
   return (
     <section className="wall-scene" aria-label="Inicio">
       <div className="wall-calendar" role="button" tabIndex={0} onClick={onHistory} onKeyDown={(e) => e.key === 'Enter' && onHistory()}>
@@ -39,7 +45,7 @@ export function WallScene({ onCloset, onHistory, onToday }: WallSceneProps) {
       {showOccasions && <div className="modal-backdrop" role="dialog" aria-modal="true" aria-label="Elige la ocasión" onClick={() => setShowOccasions(false)}>
         <section className="occasion-panel" onClick={(e) => e.stopPropagation()}>
           <div className="modal-heading"><div><p className="eyebrow">Personaliza tu sugerencia</p><h2>¿Para qué ocasión?</h2></div><button className="icon-button" onClick={() => setShowOccasions(false)} aria-label="Cerrar">×</button></div>
-          <div className="occasion-grid">{occasions.map((item) => <button key={item.id} className="occasion-option" onClick={() => { setShowOccasions(false); onToday(item.id); }}><strong>{item.label}</strong><small>{item.hint}</small></button>)}</div>
+          <div className="occasion-grid">{occasions.map((item) => <button key={item.id} className="occasion-option" onClick={() => chooseOccasion(item.id)}><strong>{item.label}</strong><small>{item.hint}</small></button>)}</div>
         </section>
       </div>}
     </section>
