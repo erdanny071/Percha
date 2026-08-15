@@ -2,6 +2,11 @@ const DB_NAME = 'percha-db';
 const DB_VERSION = 1;
 const STORE = 'kv';
 
+export interface IdbRow<T = unknown> {
+  key: string;
+  value: T;
+}
+
 let dbPromise: Promise<IDBDatabase> | null = null;
 
 export function openDB(): Promise<IDBDatabase> {
@@ -58,12 +63,12 @@ export async function idbDelete(key: string): Promise<boolean> {
   });
 }
 
-export async function idbList(prefix: string): Promise<string[]> {
+export async function idbList<T = unknown>(prefix: string): Promise<IdbRow<T>[]> {
   const db = await openDB();
   return new Promise((resolve, reject) => {
     const tx = db.transaction(STORE, 'readonly');
     const store = tx.objectStore(STORE);
-    const result: string[] = [];
+    const result: IdbRow<T>[] = [];
     const request = store.openCursor();
 
     request.onsuccess = () => {
@@ -72,8 +77,10 @@ export async function idbList(prefix: string): Promise<string[]> {
         resolve(result);
         return;
       }
-      if (typeof cursor.key === 'string' && cursor.key.startsWith(prefix)) {
-        result.push(cursor.key);
+      const key = cursor.key;
+      if (typeof key === 'string' && key.startsWith(prefix)) {
+        const row = cursor.value as { key: string; value: T };
+        result.push({ key: row.key, value: row.value });
       }
       cursor.continue();
     };
