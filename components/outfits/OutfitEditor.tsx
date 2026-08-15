@@ -8,12 +8,13 @@ interface Props {
   combo: OutfitCombo;
   garments: Garment[];
   onBack: () => void;
+  onSave: (ids: string[]) => Promise<void>;
   onWear: (ids: string[]) => Promise<void>;
 }
 
-export function OutfitEditor({ combo, garments, onBack, onWear }: Props) {
+export function OutfitEditor({ combo, garments, onBack, onSave, onWear }: Props) {
   const [current, setCurrent] = useState(combo);
-  const [saving, setSaving] = useState(false);
+  const [saving, setSaving] = useState<'save' | 'wear' | null>(null);
   const slots = useMemo(() => [
     ['top', 'Parte de arriba'], ['bottom', 'Parte de abajo'], ['shoes', 'Calzado'],
     ['accessory', 'Accesorio'], ['cap', 'Gorra'],
@@ -24,13 +25,25 @@ export function OutfitEditor({ combo, garments, onBack, onWear }: Props) {
     slot === 'shoes' ? g.category === 'shoes' :
     slot === 'accessory' ? g.category === 'accessory' : g.category === 'cap'
   ));
+  const ids = () => [current.top, current.bottom, current.shoes, current.accessory, current.cap].filter(Boolean) as string[];
+  const save = async () => {
+    const selected = ids();
+    if (selected.length < 3) return;
+    setSaving('save');
+    try { await onSave(selected); } finally { setSaving(null); }
+  };
   const wear = async () => {
-    const ids = [current.top, current.bottom, current.shoes, current.accessory, current.cap].filter(Boolean) as string[];
-    setSaving(true); try { await onWear(ids); } finally { setSaving(false); }
+    const selected = ids();
+    if (selected.length < 3) return;
+    setSaving('wear');
+    try { await onWear(selected); } finally { setSaving(null); }
   };
   return <section className="percha-panel outfit-editor">
     <header className="app-header"><button className="back-button" onClick={onBack}>←</button><div><h1>Ajusta tu outfit</h1><p>Cambia cualquier prenda antes de ponértelo</p></div></header>
     <div className="outfit-slots">{slots.map(([key,label]) => { const id=current[key]; const garment=id?garments.find(g=>g.id===id):undefined; const options=available(key); return <article className="outfit-slot" key={key}><div className="slot-head"><strong>{label}</strong>{garment&&<span>{garment.name}</span>}</div>{garment?<div className="slot-current">{garment.image&&<img src={garment.image} alt={garment.name}/>}<button onClick={()=>setCurrent(v=>({...v,[key]:undefined}))}>Quitar</button></div>:<span className="muted">Sin seleccionar</span>}<div className="slot-alternatives">{options.filter(g=>g.id!==id).slice(0,6).map(g=><button key={g.id} onClick={()=>setCurrent(v=>({...v,[key]:g.id}))}>{g.image&&<img src={g.image} alt=""/>}<small>{g.name}</small></button>)}</div></article> })}</div>
-    <button className="primary-action" disabled={saving} onClick={()=>void wear()}>{saving?'Guardando…':'Me lo pongo hoy'}</button>
+    <div className="outfit-editor-actions">
+      <button className="secondary-action" disabled={saving!==null} onClick={()=>void save()}>{saving==='save'?'Guardando…':'Guardar conjunto'}</button>
+      <button className="primary-action" disabled={saving!==null} onClick={()=>void wear()}>{saving==='wear'?'Guardando…':'Me lo pongo hoy'}</button>
+    </div>
   </section>;
 }
