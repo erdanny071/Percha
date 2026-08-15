@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Occasion } from '@/types/garment';
+import { usePerchaStore } from '@/store/usePerchaStore';
 
 interface WallSceneProps {
   onCloset: () => void;
@@ -24,7 +25,9 @@ const heroImage = 'https://www.figma.com/api/mcp/asset/87b05625-9ebe-4827-b74a-2
 
 export function WallScene({ onCloset, onHistory, onToday }: WallSceneProps) {
   const [showOccasions, setShowOccasions] = useState(false);
-  const readyCount = 0;
+  const garments = usePerchaStore((state) => state.garments);
+  const outfits = usePerchaStore((state) => state.outfits);
+  const readyCount = garments.filter((garment) => garment.status === 'disponible').length;
 
   const chooseOccasion = (occasion: Occasion) => {
     sessionStorage.setItem('percha-selected-occasion', occasion);
@@ -61,7 +64,7 @@ export function WallScene({ onCloset, onHistory, onToday }: WallSceneProps) {
         <div className="home-stats">
           <span><strong>{readyCount}</strong> Prendas listas</span>
           <i />
-          <span><strong>0</strong> Outfits creados</span>
+          <span><strong>{outfits.length}</strong> Outfits creados</span>
         </div>
       </div>
 
