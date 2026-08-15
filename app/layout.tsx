@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Playfair_Display, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
+import "./figma-polish.css";
 import { ServiceWorkerRegister } from "@/components/service-worker-register";
 
 const geist = Geist({
