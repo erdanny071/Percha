@@ -1,18 +1,18 @@
 import type { Metadata, Viewport } from "next";
-import { Fraunces, Inter, IBM_Plex_Mono } from "next/font/google";
+import { Geist, Playfair_Display, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import { ServiceWorkerRegister } from "@/components/service-worker-register";
 
-const inter = Inter({
+const geist = Geist({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-geist",
   display: "swap",
 });
 
-const fraunces = Fraunces({
+const playfair = Playfair_Display({
   subsets: ["latin"],
   weight: ["600", "700"],
-  variable: "--font-fraunces",
+  variable: "--font-playfair",
   display: "swap",
 });
 
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#2A2721",
+  themeColor: "#faf6f2",
   width: "device-width",
   initialScale: 1,
 };
@@ -56,7 +56,7 @@ export default function RootLayout({
   return (
     <html
       lang="es"
-      className={`${inter.variable} ${fraunces.variable} ${plexMono.variable}`}
+      className={`${geist.variable} ${playfair.variable} ${plexMono.variable}`}
     >
       <body>
         {children}
