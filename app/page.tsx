@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { usePerchaStore } from '@/store/usePerchaStore';
-import { Category, Occasion, Status } from '@/types/garment';
+import type { Category, Occasion, Status } from '@/types/garment';
 import { WallScene } from '@/components/views/WallScene';
 import { ClosetStage } from '@/components/views/ClosetStage';
 import { GarmentModal } from '@/components/modals/GarmentModal';
