@@ -2,7 +2,7 @@
 const isGitHubPages = process.env.GITHUB_ACTIONS === "true";
 
 const nextConfig = {
-  output: "export",
+  ...(isGitHubPages ? { output: "export" } : {}),
   trailingSlash: true,
   ...(isGitHubPages
     ? { basePath: "/Percha", assetPrefix: "/Percha/" }
