@@ -1,26 +1,24 @@
+'use client';
 import { create } from 'zustand';
 import type { Garment, Status } from '@/types/garment';
-import type { Outfit } from '@/types/outfit';
-import type { LogMap } from '@/types/log';
-import type { Settings } from '@/types/settings';
-import { storage } from '@/lib/storage';
-import { loadGarments, saveGarment, deleteGarmentStorage } from '@/lib/garments/crud';
-import { loadOutfits, saveOutfit, deleteOutfitStorage } from '@/lib/outfits/crud';
-import { loadLog, saveLog, todayStr } from '@/lib/history/log';
+import type { Outfit } from '@/types/index';
 
-const STATUS_ORDER: Status[] = ['disponible', 'lavando', 'no_quiero'];
-interface PerchaState { garments: Garment[]; outfits: Outfit[]; log: LogMap; settings: Settings; initialized: boolean; init: () => Promise<void>; addGarment: (garment: Garment) => Promise<void>; updateGarment: (id:string, patch:Partial<Garment>)=>Promise<void>; deleteGarment:(id:string)=>Promise<void>; toggleFavorite:(id:string)=>Promise<void>; cycleStatus:(id:string)=>Promise<void>; addOutfit:(outfit:Outfit)=>Promise<void>; updateOutfit:(id:string,patch:Partial<Outfit>)=>Promise<void>; deleteOutfit:(id:string)=>Promise<void>; applyOutfit:(ids:string[])=>Promise<void>; updateSettings:(patch:Partial<Settings>)=>Promise<void>; }
+type LogMap = Record<string, string[]>;
+interface PerchaState { garments: Garment[]; outfits: Outfit[]; log: LogMap; initialized: boolean; init: () => Promise<void>; addGarment:(g:Garment)=>Promise<void>; updateGarment:(id:string,p:Partial<Garment>)=>Promise<void>; deleteGarment:(id:string)=>Promise<void>; toggleFavorite:(id:string)=>Promise<void>; cycleStatus:(id:string)=>Promise<void>; addOutfit:(o:Outfit)=>Promise<void>; updateOutfit:(id:string,p:Partial<Outfit>)=>Promise<void>; deleteOutfit:(id:string)=>Promise<void>; applyOutfit:(ids:string[])=>Promise<void>; }
+const GK='percha-garments-v1',OK='percha-outfits-v1',LK='percha-log-v1';
+const read=<T,>(k:string,d:T):T=>{if(typeof window==='undefined')return d;try{const r=localStorage.getItem(k);return r?JSON.parse(r) as T:d}catch{return d}};
+const write=(k:string,v:unknown)=>{if(typeof window!=='undefined')localStorage.setItem(k,JSON.stringify(v))};
+const statuses:Status[]=['disponible','lavando','no_quiero'];
 export const usePerchaStore=create<PerchaState>((set,get)=>({
- garments:[],outfits:[],log:{},settings:{useAi:false,aiApiKey:null},initialized:false,
- async init(){if(get().initialized)return;await storage.init();const [garments,outfits,log]=await Promise.all([loadGarments(),loadOutfits(),loadLog()]);set({garments,outfits,log,initialized:true});},
- async addGarment(g){await saveGarment(g);set(s=>({garments:[...s.garments.filter(x=>x.id!==g.id),g]}));},
- async updateGarment(id,p){const g=get().garments.find(x=>x.id===id);if(!g)return;const u={...g,...p};await saveGarment(u);set(s=>({garments:s.garments.map(x=>x.id===id?u:x)}));},
- async deleteGarment(id){await deleteGarmentStorage(id);set(s=>({garments:s.garments.filter(x=>x.id!==id)}));},
- async toggleFavorite(id){const g=get().garments.find(x=>x.id===id);if(g)await get().updateGarment(id,{favorite:!g.favorite});},
- async cycleStatus(id){const g=get().garments.find(x=>x.id===id);if(!g)return;const n=STATUS_ORDER[(STATUS_ORDER.indexOf(g.status)+1)%STATUS_ORDER.length];await get().updateGarment(id,{status:n,noQuieroDate:n==='no_quiero'?todayStr():undefined});},
- async addOutfit(o){await saveOutfit(o);set(s=>({outfits:[...s.outfits.filter(x=>x.id!==o.id),o]}));},
- async updateOutfit(id,p){const o=get().outfits.find(x=>x.id===id);if(!o)return;const u={...o,...p,updatedAt:Date.now()};await saveOutfit(u);set(s=>({outfits:s.outfits.map(x=>x.id===id?u:x)}));},
- async deleteOutfit(id){await deleteOutfitStorage(id);set(s=>({outfits:s.outfits.filter(x=>x.id!==id)}));},
- async applyOutfit(ids){const d=todayStr();const l={...get().log,[d]:Array.from(new Set([...(get().log[d]??[]),...ids]))};await saveLog(l);set({log:l});},
- async updateSettings(p){const settings={...get().settings,...p};await storage.set('use-ai',settings.useAi?'true':'false');if(settings.aiApiKey)await storage.set('ai-api-key',settings.aiApiKey);else await storage.delete('ai-api-key');set({settings});}
+ garments:[],outfits:[],log:{},initialized:false,
+ async init(){if(get().initialized)return;set({garments:read<Garment[]>(GK,[]),outfits:read<Outfit[]>(OK,[]),log:read<LogMap>(LK,{}),initialized:true})},
+ async addGarment(g){const garments=[...get().garments.filter(x=>x.id!==g.id),g];write(GK,garments);set({garments})},
+ async updateGarment(id,p){const garments=get().garments.map(g=>g.id===id?{...g,...p}:g);write(GK,garments);set({garments})},
+ async deleteGarment(id){const garments=get().garments.filter(g=>g.id!==id);const outfits=get().outfits.map(o=>({...o,garmentIds:o.garmentIds.filter(x=>x!==id)}));write(GK,garments);write(OK,outfits);set({garments,outfits})},
+ async toggleFavorite(id){const g=get().garments.find(x=>x.id===id);if(g)await get().updateGarment(id,{favorite:!g.favorite})},
+ async cycleStatus(id){const g=get().garments.find(x=>x.id===id);if(!g)return;const n=statuses[(statuses.indexOf(g.status)+1)%statuses.length];await get().updateGarment(id,{status:n,noQuieroDate:n==='no_quiero'?new Date().toISOString().slice(0,10):undefined})},
+ async addOutfit(o){const outfits=[...get().outfits.filter(x=>x.id!==o.id),o];write(OK,outfits);set({outfits})},
+ async updateOutfit(id,p){const outfits=get().outfits.map(o=>o.id===id?{...o,...p}:o);write(OK,outfits);set({outfits})},
+ async deleteOutfit(id){const outfits=get().outfits.filter(o=>o.id!==id);write(OK,outfits);set({outfits})},
+ async applyOutfit(ids){const d=new Date().toISOString().slice(0,10);const log={...get().log,[d]:Array.from(new Set([...(get().log[d]??[]),...ids]))};write(LK,log);set({log})}
 }));
