@@ -41,3 +41,5 @@ jobs:
           folder: out
           branch: gh-pages
           clean: true
+
+# Trigger preview rebuild after the Figma font fix.
