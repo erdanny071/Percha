@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - v0/daaanniieelhd-8349-640032ee
+      - preview-next15
   workflow_dispatch:
 
 permissions:
@@ -27,6 +28,9 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+
+      - name: Verify Next version
+        run: npx next --version
 
       - name: Build static site
         run: npm run build
