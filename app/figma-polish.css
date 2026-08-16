@@ -1,142 +1,49 @@
-/* Figma visual polish — focused on the Home and Wardrobe screens. */
+/* Figma visual layer — selectors are scoped to the existing screens. */
 
-.phone {
-  background: #fbf8f4;
-  border-radius: 28px;
-}
+.phone:has(.hero){background:#f7f1e8;border-radius:28px}
+.phone:has(.hero) .brand-header{height:78px;padding:30px 20px 10px}
+.phone:has(.hero) .brand-mark{width:30px;height:30px;border-radius:10px;background:#2e211b;border:0;color:#fff;font-family:Georgia,'Times New Roman',serif;font-size:13px}
+.phone:has(.hero) .wordmark{font-size:18px;letter-spacing:.18em}
+.phone:has(.hero) .ai-badge{background:#fff;border-color:#eadff1;border-radius:999px;padding:5px 9px;font-size:7px}
+.phone:has(.hero) .hero{padding:5px 20px 22px}
+.phone:has(.hero) .hero-image{height:285px;border:0;border-radius:22px;background:linear-gradient(145deg,#e7d8c8 0%,#c7b0a0 48%,#856f61 100%);box-shadow:0 14px 35px rgba(64,45,35,.16);position:relative;overflow:hidden}
+.phone:has(.hero) .hero-image:before{content:'PERCHA';position:absolute;z-index:3;left:20px;bottom:20px;padding:7px 11px;border-radius:999px;background:rgba(255,250,243,.88);color:#72519b;font-size:8px;letter-spacing:1.7px;font-weight:800}
+.phone:has(.hero) .hero-image:after{content:'';position:absolute;right:12%;bottom:-15px;width:155px;height:210px;border-radius:72px 72px 25px 25px;background:linear-gradient(135deg,#f5eadc,#bda99a 72%);transform:rotate(-5deg);box-shadow:-14px 16px 25px rgba(55,37,27,.16)}
+.phone:has(.hero) .hero-image span{display:none}
+.phone:has(.hero) .hero h1{margin:20px 0 8px;font:700 31px/30px Georgia,'Times New Roman',serif;letter-spacing:-1px}
+.phone:has(.hero) .hero p{font-size:10px;line-height:15px;margin-bottom:15px;max-width:335px}
+.phone:has(.hero) .primary-btn{height:46px;border-radius:12px;background:#2e211b;box-shadow:0 9px 18px rgba(46,33,27,.15);font-size:9px}
+.phone:has(.hero) .secondary-btn.large{height:44px;border-radius:12px;margin-top:8px;background:#fffaf3;border:1px solid #d9c8e8;font-size:9px}
+.phone:has(.hero) .stats{margin-top:15px;padding-top:12px;font-size:7px}
+.phone:has(.hero) .stats b{font-size:10px}
 
-.home-screen {
-  background:
-    radial-gradient(circle at 84% 9%, rgba(220,208,236,.28), transparent 24%),
-    #fbf8f4;
-}
+.phone:has(.closed-cabinet){background:#f7f1e8}
+.phone:has(.closed-cabinet) .center-title{padding-top:12px}
+.phone:has(.closed-cabinet) .center-title h2{font-size:29px;letter-spacing:-.02em}
+.phone:has(.closed-cabinet) .closed-cabinet{width:245px;height:390px;margin-top:20px;box-shadow:0 24px 40px rgba(82,65,96,.18)}
+.phone:has(.closed-cabinet) .closed-cabinet div{background:linear-gradient(150deg,#e7dff0 0%,#c6b6d4 54%,#a794ba 100%)}
+.phone:has(.closed-cabinet) .closed-cabinet span{bottom:-45px;font-size:10px}
 
-.home-screen .brand-header {
-  height: 82px;
-  padding: 34px 24px 10px;
-}
+/* Replace emoji placeholders with restrained fashion-card artwork. */
+.fashion-image{background:linear-gradient(145deg,#eee2d5,#c9b5a6 60%,#9b8373);border-radius:12px}
+.fashion-image span{font-size:0}
+.fashion-image:before{content:'';position:absolute;width:44%;height:68%;left:28%;bottom:12%;border-radius:35% 35% 12% 12%;background:linear-gradient(135deg,#f6efe7,#bda89a);box-shadow:0 8px 14px rgba(45,32,25,.13);z-index:1}
+.fashion-image:after{content:'';position:absolute;width:23%;height:18%;left:38.5%;bottom:70%;border-radius:50%;background:#c6ad9d;opacity:.9;z-index:2}
 
-.home-screen .brand-mark {
-  width: 30px;
-  height: 30px;
-  border-radius: 10px;
-  background: #eee7f5;
-  border-color: #d8b458;
-}
+/* Card hierarchy used across the Figma screens. */
+.wardrobe-card,.saved-card,.editor-slot,.search,.upload-zone,.weather,.metrics{background:rgba(255,250,243,.94);border-color:#e6d8cc;box-shadow:0 6px 20px rgba(63,45,34,.055)}
+.wardrobe-row{height:70px}
+.category-grid{gap:11px}
+.category-grid button{padding:9px;border-radius:14px}
+.category-grid .fashion-image{height:92px}
+.detail-image{height:300px;border-radius:18px}
+.detail-body h2{font-size:25px}
+.fab{width:48px;height:48px;right:20px;bottom:91px;background:#2e211b}
+.generator h3{letter-spacing:1px}
+.generator .occasion-grid button{height:58px;border-radius:13px;background:#f3eaf7}
+.outfit-stack .fashion-image{height:150px}
+.saved-card .fashion-image{height:60px}
+.bottom-nav{height:76px;background:rgba(255,250,243,.98);border-top:1px solid #e6d8cc;padding:10px 17px 14px}
+.bottom-nav button.active{color:#72519b}
 
-.home-screen .wordmark {
-  font-size: 21px;
-}
-
-.home-screen .ai-badge {
-  border-radius: 999px;
-  padding: 7px 11px;
-  font-size: 9px;
-  letter-spacing: .04em;
-}
-
-.home-screen .hero {
-  padding: 10px 24px 28px;
-}
-
-.home-screen .hero-image {
-  height: 292px;
-  border: 0;
-  border-radius: 22px;
-  box-shadow: 0 14px 34px rgba(70,54,45,.12);
-  background-position: center;
-}
-
-.home-screen .hero-image::before {
-  left: 14px;
-  bottom: 14px;
-  padding: 7px 12px;
-  font-size: 10px;
-  background: rgba(255,255,255,.9);
-}
-
-.home-screen .hero h1 {
-  margin: 24px 0 10px;
-  font-size: 38px;
-  line-height: 40px;
-  letter-spacing: -.025em;
-}
-
-.home-screen .hero p {
-  max-width: 330px;
-  margin-bottom: 20px;
-  font-size: 14px;
-  line-height: 21px;
-}
-
-.home-screen .primary-btn {
-  height: 52px;
-  border-radius: 14px;
-  font-size: 13px;
-}
-
-.home-screen .secondary-btn.large {
-  height: 50px;
-  border-radius: 14px;
-  margin-top: 10px;
-  font-size: 13px;
-}
-
-.home-screen .stats {
-  margin-top: 18px;
-  padding-top: 14px;
-  font-size: 10px;
-}
-
-.closed-closet {
-  background: #fbf8f4;
-}
-
-.closed-closet .status-space {
-  height: 50px;
-}
-
-.closed-closet .center-title {
-  padding-top: 12px;
-}
-
-.closed-closet .center-title h2 {
-  font-size: 31px;
-  letter-spacing: -.02em;
-}
-
-.closed-closet .closed-cabinet {
-  width: 252px;
-  height: 408px;
-  margin-top: 22px;
-  box-shadow: 0 24px 40px rgba(82,65,96,.18);
-}
-
-.closed-closet .closed-cabinet div {
-  background: linear-gradient(150deg,#e7dff0 0%,#c6b6d4 54%,#a794ba 100%);
-}
-
-.closed-closet .closed-cabinet span {
-  bottom: -48px;
-  font-size: 11px;
-  letter-spacing: .01em;
-}
-
-.closed-closet .side-actions {
-  right: 18px;
-  top: 47%;
-}
-
-.closed-closet .side-actions button {
-  width: 44px;
-  height: 44px;
-  border-radius: 14px;
-  color: #725c89;
-}
-
-@media (max-width: 420px) {
-  .phone {
-    width: 100vw;
-    border-radius: 0;
-  }
-}
+@media(max-width:420px){.phone{width:100vw;border-radius:0}}
