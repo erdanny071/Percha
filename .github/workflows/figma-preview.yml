@@ -1,0 +1,29 @@
+name: Publish Figma visual preview
+
+on:
+  push:
+    branches:
+      - v0/daaanniieelhd-8349-640032ee
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install
+      - run: npm run build
+      - name: Use Figma visual preview as the site entry
+        run: cp out/figma.html out/index.html
+      - name: Publish preview
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: out
+          branch: gh-pages
+          clean: true
