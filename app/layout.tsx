@@ -1,28 +1,7 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Playfair_Display, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import "./figma-polish.css";
 import { ServiceWorkerRegister } from "@/components/service-worker-register";
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-geist",
-  display: "swap",
-});
-
-const playfair = Playfair_Display({
-  subsets: ["latin"],
-  weight: ["600", "700"],
-  variable: "--font-playfair",
-  display: "swap",
-});
-
-const plexMono = IBM_Plex_Mono({
-  subsets: ["latin"],
-  weight: ["500"],
-  variable: "--font-plex-mono",
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   title: "Percha",
@@ -47,11 +26,8 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es" className={`${inter.variable} ${playfair.variable} ${plexMono.variable}`}>
-      <body>
-        {children}
-        <ServiceWorkerRegister />
-      </body>
+    <html lang="es" className="percha-fonts">
+      <body>{children}<ServiceWorkerRegister /></body>
     </html>
   );
 }
